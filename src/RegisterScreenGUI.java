@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class RegisterScreenGUI extends JFrame implements ActionListener {
+public class RegisterScreenGUI extends JFrame {
     private static RegisterScreenGUI singleInstance = null;
     private static JPanel panel = new JPanel();
     private static JLabel userLabel;
@@ -42,7 +42,55 @@ public class RegisterScreenGUI extends JFrame implements ActionListener {
 
         registerButton = new JButton("Register");
         registerButton.setBounds(10,100,90,25);
-        registerButton.addActionListener(this);
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection connection = null;
+                Statement stmt = null;
+                String sql = null;
+                String result = null;
+
+                String user = userText.getText();
+                String pass = passText.getText();
+
+                try {
+                    connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+                } catch (SQLException ex){
+                    String error = String.format("Could not connect to SQL database");
+                    JOptionPane.showMessageDialog(RegisterScreenGUI.getInstance(), error);
+                    return;
+                }
+
+
+                try {
+                    stmt = connection.createStatement();
+                    sql = String.format("SELECT USERNAME FROM USERS WHERE USERNAME = '%s'",user);
+                    ResultSet resultSet = stmt.executeQuery(sql);
+                    boolean userPass = resultSet.next();
+
+                    if (userPass) {
+                        result = String.format("User '%s' already exists. Choose another username",user);
+                        JOptionPane.showMessageDialog(RegisterScreenGUI.getInstance(), result);
+                        return;
+                    }
+
+                    stmt = connection.createStatement();
+                    sql = String.format("INSERT INTO USERS (username, password) VALUES ('%s','%s')",user,pass);
+                    stmt.executeUpdate(sql);
+
+                    LoginScreenGUI.getInstance().setVisible(true);
+                    RegisterScreenGUI.getInstance().setVisible(false);
+
+                    result = String.format("User %s has been registered successfully", user);
+                    JOptionPane.showMessageDialog(RegisterScreenGUI.getInstance(), result);
+
+
+                } catch (SQLException ex) {
+                    result = String.format("User has not been registered successfully. Try again");
+                    JOptionPane.showMessageDialog(RegisterScreenGUI.getInstance(), result);
+                }
+            }
+        });
         panel.add(registerButton);
 
     }
@@ -55,53 +103,4 @@ public class RegisterScreenGUI extends JFrame implements ActionListener {
         return singleInstance;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Connection connection = null;
-        Statement stmt = null;
-        String sql = null;
-        String result = null;
-
-        String user = userText.getText();
-        String pass = passText.getText();
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
-        } catch (SQLException ex){
-            String error = String.format("Could not connect to SQL database");
-            JOptionPane.showMessageDialog(this, error);
-            return;
-        }
-
-
-        try {
-            stmt = connection.createStatement();
-            sql = String.format("SELECT USERNAME FROM USERS WHERE USERNAME = '%s'",user);
-            ResultSet resultSet = stmt.executeQuery(sql);
-            boolean userPass = resultSet.next();
-
-            if (userPass) {
-                result = String.format("User '%s' already exists. Choose another username",user);
-                JOptionPane.showMessageDialog(this, result);
-                return;
-            }
-
-            stmt = connection.createStatement();
-            sql = String.format("INSERT INTO USERS (username, password) VALUES ('%s','%s')",user,pass);
-            stmt.executeUpdate(sql);
-
-            LoginScreenGUI.getInstance().setVisible(true);
-            this.setVisible(false);
-
-            result = String.format("User %s has been registered successfully", user);
-            JOptionPane.showMessageDialog(this, result);
-
-
-        } catch (SQLException ex) {
-            result = String.format("User has not been registered successfully. Try again");
-            JOptionPane.showMessageDialog(this, result);
-        }
-
-
-    }
 }
