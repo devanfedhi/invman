@@ -30,7 +30,8 @@ public class HomeScreenGUI extends JFrame {
         userManagementButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                UserManagementScreenGUI.getInstance().setVisible(true);
+                HomeScreenGUI.getInstance().setVisible(false);
             }
         });
         panel.add(userManagementButton);
@@ -64,6 +65,36 @@ public class HomeScreenGUI extends JFrame {
             }
         });
         panel.add(productButton);
+
+        makeOrderButton = new JButton("Order",new ImageIcon("images/makeorder.png"));
+        makeOrderButton.setBounds(10,330,150,60);
+        makeOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(makeOrderButton);
+
+        viewOrderButton = new JButton("View Order",new ImageIcon("images/vieworder.png"));
+        viewOrderButton.setBounds(10,410,150,60);
+        viewOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(viewOrderButton);
+
+        logoutButton = new JButton("Logout",new ImageIcon("images/logout.png"));
+        logoutButton.setBounds(10,490,150,60);
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(logoutButton);
     }
 
     public static HomeScreenGUI getInstance() {
