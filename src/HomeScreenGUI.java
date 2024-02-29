@@ -24,10 +24,9 @@ public class HomeScreenGUI extends JFrame {
 
         panel.setLayout(null);
 
-        ImageIcon user = new ImageIcon("user.png");
 
-        userManagementButton = new JButton(user);
-        userManagementButton.setBounds(10,10,60,60);
+        userManagementButton = new JButton("User",new ImageIcon("images/user.png"));
+        userManagementButton.setBounds(10,10,150,60);
         userManagementButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -36,6 +35,35 @@ public class HomeScreenGUI extends JFrame {
         });
         panel.add(userManagementButton);
 
+        customerButton = new JButton("Customer",new ImageIcon("images/customer.png"));
+        customerButton.setBounds(10,90,150,60);
+        customerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(customerButton);
+
+        categoryButton = new JButton("Category",new ImageIcon("images/category.png"));
+        categoryButton.setBounds(10,170,150,60);
+        categoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(categoryButton);
+
+        productButton = new JButton("Product",new ImageIcon("images/product.png"));
+        productButton.setBounds(10,250,150,60);
+        productButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(productButton);
     }
 
     public static HomeScreenGUI getInstance() {
