@@ -53,8 +53,9 @@ public class UserManagementScreenGUI extends JFrame {
             ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS");
 
             JTable table = createTable();
-            table.setBounds(150,10,300,300);
-            panel.add(table);
+            JScrollPane tableWithScroll = new JScrollPane(table);
+            tableWithScroll.setBounds(200,10,300,100);
+            panel.add(tableWithScroll);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -73,14 +74,42 @@ public class UserManagementScreenGUI extends JFrame {
         return singleInstance;
     }
 
-    public static JTable createTable()
-    {
-        String[] columnNames = {"First Name", "Last Name"};
-        Object[][] data = {{"Kathy", "Smith"},{"John", "Doe"}};
-        JTable table = new JTable(data, columnNames);
-        table.setFillsViewportHeight(true);
+    public static JTable createTable() {
+        JTable table = null;
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS");
 
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            int cols = rsmd.getColumnCount();
+            String[] colName = new String[cols];
+
+            DefaultTableModel model = new DefaultTableModel();
+
+            for (int i = 0; i < cols; i++) {
+                colName[i] = rsmd.getColumnName(i+1);
+            }
+            model.setColumnIdentifiers(colName);
+            String user,pass;
+            while (resultSet.next()) {
+                user = resultSet.getString("username");
+                pass = resultSet.getString("password");
+                String[] row = {user,pass};
+                model.addRow(row);
+            }
+
+            String[] columnNames = {"username","password"};
+            table = new JTable(model);
+            table.setFillsViewportHeight(true);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return table;
+
+
     }
 
 }
