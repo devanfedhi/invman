@@ -12,6 +12,16 @@ public class UserManagementScreenGUI extends JFrame {
     private static JPanel panel = new JPanel();
 
     private static JButton homeButton;
+    private static JButton addUserButton;
+    private static JButton removeUserButton;
+    private static JPanel addUserPanel = new JPanel();
+
+    private static JLabel userLabel;
+    private static JTextField userText;
+    private static JLabel passLabel;
+    private static JPasswordField passText;
+    private static JButton registerButton;
+
 
 
     private UserManagementScreenGUI(){
@@ -22,6 +32,36 @@ public class UserManagementScreenGUI extends JFrame {
         this.add(panel);
 
         panel.setLayout(null);
+        addUserPanel.setLayout(null);
+
+        userLabel = new JLabel("User");
+        userLabel.setBounds(550,20,80,25);
+        addUserPanel.add(userLabel);
+
+        userText = new JTextField();
+        userText.setBounds(640,20,165,25);
+        addUserPanel.add(userText);
+
+        passLabel = new JLabel("Password");
+        passLabel.setBounds(550,60,80,25);
+        addUserPanel.add(passLabel);
+
+        passText = new JPasswordField();
+        passText.setBounds(640,60,165,25);
+        addUserPanel.add(passText);
+
+        registerButton = new JButton("Register");
+        registerButton.setBounds(550,100,90,25);
+        addUserPanel.add(registerButton);
+//        Connection connection = null;
+//
+//        try {
+//            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+//
+//        } catch (SQLException e) {
+//            String result = String.format("Connection to server unsuccessful. Login failed. Try again");
+//            JOptionPane.showMessageDialog(UserManagementScreenGUI.getInstance(), result);
+//        }
 
 
         homeButton = new JButton("Home",new ImageIcon("images/home.png"));
@@ -35,34 +75,33 @@ public class UserManagementScreenGUI extends JFrame {
         });
         panel.add(homeButton);
 
-        Connection connection = null;
-        String result = null;
-        Statement statement = null;
+        addUserButton = new JButton("Add User",new ImageIcon("images/adduser.png"));
+        addUserButton.setBounds(10,90,150,60);
+        addUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserManagementScreenGUI.getInstance().add(addUserPanel);
+                UserManagementScreenGUI.getInstance().setVisible(true);
 
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+            }
+        });
+        panel.add(addUserButton);
 
-        } catch (SQLException e) {
-            result = String.format("Connection to server unsuccessful. Login failed. Try again");
-            JOptionPane.showMessageDialog(UserManagementScreenGUI.getInstance(), result);
-        }
+        removeUserButton = new JButton("Remove User",new ImageIcon("images/remuser.png"));
+        removeUserButton.setBounds(10,170,150,60);
+        removeUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HomeScreenGUI.getInstance().setVisible(true);
+                UserManagementScreenGUI.getInstance().setVisible(false);
+            }
+        });
+        panel.add(removeUserButton);
 
-        try {
-
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS");
-
-            JTable table = createTable();
-            JScrollPane tableWithScroll = new JScrollPane(table);
-            tableWithScroll.setBounds(200,10,300,100);
-            panel.add(tableWithScroll);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-
+        JTable table = createTable();
+        JScrollPane tableWithScroll = new JScrollPane(table);
+        tableWithScroll.setBounds(200,10,300,500);
+        panel.add(tableWithScroll);
 
     }
 
@@ -99,7 +138,6 @@ public class UserManagementScreenGUI extends JFrame {
                 model.addRow(row);
             }
 
-            String[] columnNames = {"username","password"};
             table = new JTable(model);
             table.setFillsViewportHeight(true);
 
