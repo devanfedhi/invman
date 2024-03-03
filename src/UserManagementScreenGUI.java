@@ -18,6 +18,8 @@ public class UserManagementScreenGUI extends JFrame {
 
     private static JLabel userLabel;
     private static JTextField userText;
+    private static JLabel userRemoveLabel;
+    private static JTextField userRemoveText;
     private static JLabel passLabel;
     private static JPasswordField passText;
     private static JButton registerButton;
@@ -148,16 +150,16 @@ public class UserManagementScreenGUI extends JFrame {
         removeUserFrame.setSize(400,400);
         removeUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        removeUserFrame.setLayout(null);
+        removeUserPanel.setLayout(null);
 
 
-        userLabel = new JLabel("User");
-        userLabel.setBounds(10,20,80,25);
-        removeUserPanel.add(userLabel);
+        userRemoveLabel = new JLabel("User");
+        userRemoveLabel.setBounds(10,20,80,25);
+        removeUserPanel.add(userRemoveLabel);
 
-        userText = new JTextField();
-        userText.setBounds(100,20,165,25);
-        removeUserPanel.add(userText);
+        userRemoveText = new JTextField();
+        userRemoveText.setBounds(100,20,165,25);
+        removeUserPanel.add(userRemoveText);
 
         removeButton = new JButton("Remove");
         removeButton.setBounds(10,60,90,25);
