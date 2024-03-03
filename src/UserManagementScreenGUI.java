@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -14,7 +15,6 @@ public class UserManagementScreenGUI extends JFrame {
     private static JButton homeButton;
     private static JButton addUserButton;
     private static JButton removeUserButton;
-    private static JPanel addUserPanel = new JPanel();
 
     private static JLabel userLabel;
     private static JTextField userText;
@@ -22,37 +22,22 @@ public class UserManagementScreenGUI extends JFrame {
     private static JPasswordField passText;
     private static JButton registerButton;
 
+    private static JFrame changeUserFrame;
+    private static JPanel changeUserPanel = new JPanel();
+
+
+
 
 
     private UserManagementScreenGUI(){
         super();
 
-        this.setSize(400,400);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(panel);
+        this.setupMain();
 
-        panel.setLayout(null);
-        addUserPanel.setLayout(null);
+        this.setupAddUser();
 
-        userLabel = new JLabel("User");
-        userLabel.setBounds(550,20,80,25);
-        addUserPanel.add(userLabel);
 
-        userText = new JTextField();
-        userText.setBounds(640,20,165,25);
-        addUserPanel.add(userText);
 
-        passLabel = new JLabel("Password");
-        passLabel.setBounds(550,60,80,25);
-        addUserPanel.add(passLabel);
-
-        passText = new JPasswordField();
-        passText.setBounds(640,60,165,25);
-        addUserPanel.add(passText);
-
-        registerButton = new JButton("Register");
-        registerButton.setBounds(550,100,90,25);
-        addUserPanel.add(registerButton);
 //        Connection connection = null;
 //
 //        try {
@@ -63,6 +48,21 @@ public class UserManagementScreenGUI extends JFrame {
 //            JOptionPane.showMessageDialog(UserManagementScreenGUI.getInstance(), result);
 //        }
 
+    }
+
+    public static UserManagementScreenGUI getInstance() {
+        if (singleInstance == null) {
+            singleInstance = new UserManagementScreenGUI();
+        }
+
+        return singleInstance;
+    }
+
+    public void setupMain(){
+        this.setSize(400,400);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        panel.setLayout(null);
 
         homeButton = new JButton("Home",new ImageIcon("images/home.png"));
         homeButton.setBounds(10,10,150,60);
@@ -80,8 +80,7 @@ public class UserManagementScreenGUI extends JFrame {
         addUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UserManagementScreenGUI.getInstance().add(addUserPanel);
-                UserManagementScreenGUI.getInstance().setVisible(true);
+
 
             }
         });
@@ -92,8 +91,7 @@ public class UserManagementScreenGUI extends JFrame {
         removeUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HomeScreenGUI.getInstance().setVisible(true);
-                UserManagementScreenGUI.getInstance().setVisible(false);
+
             }
         });
         panel.add(removeUserButton);
@@ -103,15 +101,42 @@ public class UserManagementScreenGUI extends JFrame {
         tableWithScroll.setBounds(200,10,300,500);
         panel.add(tableWithScroll);
 
+        this.add(panel);
+
     }
 
-    public static UserManagementScreenGUI getInstance() {
-        if (singleInstance == null) {
-            singleInstance = new UserManagementScreenGUI();
-        }
+    public void setupAddUser(){
 
-        return singleInstance;
+        changeUserFrame = new JFrame();
+        changeUserFrame.setSize(400,400);
+        changeUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        changeUserPanel.setLayout(null);
+
+
+        userLabel = new JLabel("User");
+        userLabel.setBounds(10,20,80,25);
+        changeUserPanel.add(userLabel);
+
+        userText = new JTextField();
+        userText.setBounds(100,20,165,25);
+        changeUserPanel.add(userText);
+
+        passLabel = new JLabel("Password");
+        passLabel.setBounds(10,60,80,25);
+        changeUserPanel.add(passLabel);
+
+        passText = new JPasswordField();
+        passText.setBounds(100,60,165,25);
+        changeUserPanel.add(passText);
+
+        registerButton = new JButton("Register");
+        registerButton.setBounds(10,100,90,25);
+        changeUserPanel.add(registerButton);
+
+        changeUserFrame.add(changeUserPanel);
     }
+
 
     public static JTable createTable() {
         JTable table = null;
