@@ -1,13 +1,8 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import GeneralScreens.HomeScreenGUI;
+import GeneralScreens.LoginScreenGUI;
+import GeneralScreens.RegisterScreenGUI;
 
 public class Main {
 

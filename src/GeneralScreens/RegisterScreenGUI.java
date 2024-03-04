@@ -1,4 +1,4 @@
-import com.mysql.cj.log.Log;
+package GeneralScreens;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

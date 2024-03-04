@@ -1,12 +1,15 @@
+package UserManagement;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import GeneralScreens.HomeScreenGUI;
 
 public class UserManagementScreenGUI extends JFrame {
     private static UserManagementScreenGUI singleInstance = null;
@@ -16,22 +19,11 @@ public class UserManagementScreenGUI extends JFrame {
     private static JButton addUserButton;
     private static JButton removeUserButton;
 
-    private static JLabel userLabel;
-    private static JTextField userText;
-    private static JLabel userRemoveLabel;
-    private static JTextField userRemoveText;
-    private static JLabel passLabel;
-    private static JPasswordField passText;
-    private static JButton registerButton;
-    private static JButton removeButton;
+    public List<JButton> getAllButtons() {
+        return allButtons;
+    }
 
-    private static JFrame changeUserFrame;
-    private static JFrame removeUserFrame;
-    private static JPanel changeUserPanel = new JPanel();
-    private static JPanel removeUserPanel =  new JPanel();
-
-
-
+    private List<JButton> allButtons = new ArrayList<JButton>(Arrays.asList(homeButton,addUserButton,removeUserButton));
 
 
     private UserManagementScreenGUI(){
@@ -39,10 +31,8 @@ public class UserManagementScreenGUI extends JFrame {
 
         this.setupMain();
 
-        this.setupAddUser();
-
-        this.setupRemoveUser();
-
+        AddUserSubScreenGUI.getInstance();
+        RemoveUserSubScreenGUI.getInstance();
 
 
 //        Connection connection = null;
@@ -52,7 +42,7 @@ public class UserManagementScreenGUI extends JFrame {
 //
 //        } catch (SQLException e) {
 //            String result = String.format("Connection to server unsuccessful. Login failed. Try again");
-//            JOptionPane.showMessageDialog(UserManagementScreenGUI.getInstance(), result);
+//            JOptionPane.showMessageDialog(UserManagement.UserManagementScreenGUI.getInstance(), result);
 //        }
 
     }
@@ -87,7 +77,10 @@ public class UserManagementScreenGUI extends JFrame {
         addUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeUserFrame.setVisible(true);
+                AddUserSubScreenGUI.getInstance().setVisible(true);
+                homeButton.setEnabled(false);
+                addUserButton.setEnabled(false);
+                removeUserButton.setEnabled(false);
 
             }
         });
@@ -98,7 +91,10 @@ public class UserManagementScreenGUI extends JFrame {
         removeUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeUserFrame.setVisible(true);
+                RemoveUserSubScreenGUI.getInstance().setVisible(true);
+                for (int i = 0; i < allButtons.size(); i++) {
+                    allButtons.get(i).setEnabled(false);
+                }
             }
         });
         panel.add(removeUserButton);
@@ -110,62 +106,6 @@ public class UserManagementScreenGUI extends JFrame {
 
         this.add(panel);
 
-    }
-
-    public void setupAddUser(){
-
-        changeUserFrame = new JFrame();
-        changeUserFrame.setSize(400,400);
-        changeUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        changeUserPanel.setLayout(null);
-
-
-        userLabel = new JLabel("User");
-        userLabel.setBounds(10,20,80,25);
-        changeUserPanel.add(userLabel);
-
-        userText = new JTextField();
-        userText.setBounds(100,20,165,25);
-        changeUserPanel.add(userText);
-
-        passLabel = new JLabel("Password");
-        passLabel.setBounds(10,60,80,25);
-        changeUserPanel.add(passLabel);
-
-        passText = new JPasswordField();
-        passText.setBounds(100,60,165,25);
-        changeUserPanel.add(passText);
-
-        registerButton = new JButton("Register");
-        registerButton.setBounds(10,100,90,25);
-        changeUserPanel.add(registerButton);
-
-        changeUserFrame.add(changeUserPanel);
-    }
-
-    public void setupRemoveUser(){
-
-        removeUserFrame = new JFrame();
-        removeUserFrame.setSize(400,400);
-        removeUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        removeUserPanel.setLayout(null);
-
-
-        userRemoveLabel = new JLabel("User");
-        userRemoveLabel.setBounds(10,20,80,25);
-        removeUserPanel.add(userRemoveLabel);
-
-        userRemoveText = new JTextField();
-        userRemoveText.setBounds(100,20,165,25);
-        removeUserPanel.add(userRemoveText);
-
-        removeButton = new JButton("Remove");
-        removeButton.setBounds(10,60,90,25);
-        removeUserPanel.add(removeButton);
-
-        removeUserFrame.add(removeUserPanel);
     }
 
 
