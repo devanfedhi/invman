@@ -100,6 +100,7 @@ public class UserManagementScreenGUI extends JFrame {
 
 
         table = createTable();
+        table.setDefaultEditor(Object.class, null);
         JScrollPane tableWithScroll = new JScrollPane(table);
         tableWithScroll.setBounds(200,10,300,500);
         panel.add(tableWithScroll);
