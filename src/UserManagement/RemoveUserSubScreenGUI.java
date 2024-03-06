@@ -6,6 +6,7 @@ import GeneralScreens.HomeScreenGUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.List;
 
 public class RemoveUserSubScreenGUI extends JFrame {
@@ -32,6 +33,10 @@ public class RemoveUserSubScreenGUI extends JFrame {
         return singleInstance;
     }
 
+    public void refresh(){
+        userRemoveText.setText("");
+    }
+
 
     public void setup(){
 
@@ -51,6 +56,62 @@ public class RemoveUserSubScreenGUI extends JFrame {
 
         removeButton = new JButton("Remove");
         removeButton.setBounds(10,60,90,25);
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection connection = null;
+                Statement stmt = null;
+                String sql = null;
+                String result = null;
+
+                String user = userRemoveText.getText();
+
+                try {
+                    connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+                } catch (SQLException ex){
+                    result = String.format("Could not connect to SQL database");
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                    return;
+                }
+
+
+                try {
+                    stmt = connection.createStatement();
+                    sql = String.format("SELECT USERNAME FROM USERS WHERE USERNAME = '%s'",user);
+                    ResultSet resultSet = stmt.executeQuery(sql);
+                    boolean userPass = resultSet.next();
+
+                    if (!userPass) {
+                        result = String.format("User does not exists. Choose another username",user);
+                        JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                        return;
+                    }
+
+                    stmt = connection.createStatement();
+                    sql = String.format("DELETE FROM USERS WHERE USERNAME = '%s'",user);
+                    stmt.executeUpdate(sql);
+
+                    result = String.format("User %s has been removed successfully", user);
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+
+                    List<JButton> allButtons = UserManagementScreenGUI.getInstance().getAllButtons();
+                    for (int i = 0; i < allButtons.size(); i++) {
+                        allButtons.get(i).setEnabled(true);
+                    }
+
+                    RemoveUserSubScreenGUI.getInstance().dispose();
+
+                    UserManagementScreenGUI.getInstance().refreshTable();
+
+
+                } catch (SQLException ex) {
+                    result = String.format("User has not been registered successfully. Try again");
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                }
+
+                
+            }
+        });
         removeUserPanel.add(removeButton);
 
         cancelButton = new JButton("Cancel");

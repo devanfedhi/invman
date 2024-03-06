@@ -73,6 +73,7 @@ public class UserManagementScreenGUI extends JFrame {
 
                     allButtons.get(i).setEnabled(false);
                 }
+                AddUserSubScreenGUI.getInstance().refresh();
 
             }
         });
@@ -88,6 +89,7 @@ public class UserManagementScreenGUI extends JFrame {
 
                     allButtons.get(i).setEnabled(false);
                 }
+                RemoveUserSubScreenGUI.getInstance().refresh();
             }
         });
         panel.add(removeUserButton);

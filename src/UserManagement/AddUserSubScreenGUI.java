@@ -37,6 +37,11 @@ public class AddUserSubScreenGUI extends JFrame {
         return singleInstance;
     }
 
+    public void refresh(){
+        userText.setText("");
+        passText.setText("");
+    }
+
 
     public void setup(){
 
