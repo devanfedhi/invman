@@ -52,22 +52,22 @@ public class AddCategorySubScreenGUI extends JFrame {
 
 
         categoryLabel = new JLabel("Category Name");
-        categoryLabel.setBounds(10,20,80,25);
+        categoryLabel.setBounds(10,20,160,25);
         addCategoryPanel.add(categoryLabel);
 
         categoryText = new JTextField();
-        categoryText.setBounds(100,20,165,25);
+        categoryText.setBounds(180,20,165,25);
         addCategoryPanel.add(categoryText);
 
         descLabel = new JLabel("Category Description");
-        descLabel.setBounds(10,60,80,25);
+        descLabel.setBounds(10,60,160,25);
         addCategoryPanel.add(descLabel);
 
-        descText = new JPasswordField();
-        descText.setBounds(100,60,165,25);
+        descText = new JTextField();
+        descText.setBounds(180,60,165,25);
         addCategoryPanel.add(descText);
 
-        registerButton = new JButton("Register");
+        registerButton = new JButton("Add");
         registerButton.setBounds(10,100,90,25);
         registerButton.addActionListener(new ActionListener() {
             @Override

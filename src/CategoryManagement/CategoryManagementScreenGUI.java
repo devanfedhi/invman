@@ -14,10 +14,6 @@ import Utilities.MultiLineCellRenderer;
 public class CategoryManagementScreenGUI extends JFrame {
     private static CategoryManagementScreenGUI singleInstance = null;
     private static JPanel panel = new JPanel();
-    private static int baseRowHeight = 16;
-    private static int baseRowWidth = 134;
-
-
     private static JButton homeButton;
     private static JButton addCategoryButton;
     private static JButton removeCategoryButton;
@@ -59,7 +55,7 @@ public class CategoryManagementScreenGUI extends JFrame {
         });
         panel.add(homeButton);
 
-        addCategoryButton = new JButton("Add Category",new ImageIcon("images/adduser.png"));
+        addCategoryButton = new JButton("Add",new ImageIcon("images/adduser.png"));
         addCategoryButton.setBounds(10,90,150,60);
         addCategoryButton.addActionListener(new ActionListener() {
             @Override
@@ -75,12 +71,17 @@ public class CategoryManagementScreenGUI extends JFrame {
         });
         panel.add(addCategoryButton);
 
-        removeCategoryButton = new JButton("Remove Category",new ImageIcon("images/remuser.png"));
+        removeCategoryButton = new JButton("Remove",new ImageIcon("images/remuser.png"));
         removeCategoryButton.setBounds(10,170,150,60);
         removeCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                RemoveCategorySubScreenGUI.getInstance().setVisible(true);
+                for (int i = 0; i < allButtons.size(); i++) {
 
+                    allButtons.get(i).setEnabled(false);
+                }
+                RemoveCategorySubScreenGUI.getInstance().refresh();
             }
         });
         panel.add(removeCategoryButton);
