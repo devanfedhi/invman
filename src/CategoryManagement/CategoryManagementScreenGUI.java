@@ -1,4 +1,4 @@
-package UserManagement;
+package CategoryManagement;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -6,42 +6,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import GeneralScreens.HomeScreenGUI;
+import Utilities.MultiLineCellRenderer;
 
-public class UserManagementScreenGUI extends JFrame {
-    private static UserManagementScreenGUI singleInstance = null;
+public class CategoryManagementScreenGUI extends JFrame {
+    private static CategoryManagementScreenGUI singleInstance = null;
     private static JPanel panel = new JPanel();
+    private static int baseRowHeight = 16;
+    private static int baseRowWidth = 134;
+
 
     private static JButton homeButton;
-    private static JButton addUserButton;
-    private static JButton removeUserButton;
-
+    private static JButton addCategoryButton;
+    private static JButton removeCategoryButton;
     private static JTable table;
     private static DefaultTableModel model;
 
     private List<JButton> allButtons = new ArrayList<>();
 
 
-    private UserManagementScreenGUI(){
+    private CategoryManagementScreenGUI(){
         super();
 
         this.setupMain();
 
     }
 
-    public static UserManagementScreenGUI getInstance() {
+    public static CategoryManagementScreenGUI getInstance() {
         if (singleInstance == null) {
-            singleInstance = new UserManagementScreenGUI();
+            singleInstance = new CategoryManagementScreenGUI();
         }
-
-        return singleInstance;
-    }
-
-    public static UserManagementScreenGUI refreshInstance() {
-        singleInstance = new UserManagementScreenGUI();
 
         return singleInstance;
     }
@@ -58,51 +54,52 @@ public class UserManagementScreenGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HomeScreenGUI.getInstance().setVisible(true);
-                UserManagementScreenGUI.getInstance().dispose();
+                CategoryManagementScreenGUI.getInstance().dispose();
             }
         });
         panel.add(homeButton);
 
-        addUserButton = new JButton("Add User",new ImageIcon("images/adduser.png"));
-        addUserButton.setBounds(10,90,150,60);
-        addUserButton.addActionListener(new ActionListener() {
+        addCategoryButton = new JButton("Add Category",new ImageIcon("images/adduser.png"));
+        addCategoryButton.setBounds(10,90,150,60);
+        addCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddUserSubScreenGUI.getInstance().setVisible(true);
+                AddCategorySubScreenGUI.getInstance().setVisible(true);
                 for (int i = 0; i < allButtons.size(); i++) {
 
                     allButtons.get(i).setEnabled(false);
                 }
-                AddUserSubScreenGUI.getInstance().refresh();
+                AddCategorySubScreenGUI.getInstance().refresh();
 
             }
         });
-        panel.add(addUserButton);
+        panel.add(addCategoryButton);
 
-        removeUserButton = new JButton("Remove User",new ImageIcon("images/remuser.png"));
-        removeUserButton.setBounds(10,170,150,60);
-        removeUserButton.addActionListener(new ActionListener() {
+        removeCategoryButton = new JButton("Remove Category",new ImageIcon("images/remuser.png"));
+        removeCategoryButton.setBounds(10,170,150,60);
+        removeCategoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RemoveUserSubScreenGUI.getInstance().setVisible(true);
-                for (int i = 0; i < allButtons.size(); i++) {
 
-                    allButtons.get(i).setEnabled(false);
-                }
-                RemoveUserSubScreenGUI.getInstance().refresh();
             }
         });
-        panel.add(removeUserButton);
+        panel.add(removeCategoryButton);
 
         allButtons.add(homeButton);
-        allButtons.add(addUserButton);
-        allButtons.add(removeUserButton);
+        allButtons.add(addCategoryButton);
+        allButtons.add(removeCategoryButton);
 
 
         table = createTable();
         table.setDefaultEditor(Object.class, null);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        table.getColumnModel().getColumn(0).setPreferredWidth(160);
+        table.getColumnModel().getColumn(1).setPreferredWidth(800);
+        table.getColumnModel().getColumn(1).setCellRenderer(new MultiLineCellRenderer());
+
         JScrollPane tableWithScroll = new JScrollPane(table);
-        tableWithScroll.setBounds(200,10,300,500);
+        tableWithScroll.setBounds(200,10,960,500);
         panel.add(tableWithScroll);
 
         this.add(panel);
@@ -115,7 +112,7 @@ public class UserManagementScreenGUI extends JFrame {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS");
+            ResultSet resultSet = statement.executeQuery("SELECT CATEGORY_NAME, CATEGORY_DESC FROM CATEGORY");
 
             ResultSetMetaData rsmd = resultSet.getMetaData();
             int cols = rsmd.getColumnCount();
@@ -127,15 +124,16 @@ public class UserManagementScreenGUI extends JFrame {
                 colName[i] = rsmd.getColumnName(i+1);
             }
             model.setColumnIdentifiers(colName);
-            String user,pass;
+            String CATEGORY_NAME,CATEGORY_DESC;
             while (resultSet.next()) {
-                user = resultSet.getString("username");
-                pass = resultSet.getString("password");
-                String[] row = {user,pass};
+                CATEGORY_NAME = resultSet.getString("CATEGORY_NAME");
+                CATEGORY_DESC = resultSet.getString("CATEGORY_DESC");
+                String[] row = {CATEGORY_NAME,CATEGORY_DESC};
                 model.addRow(row);
             }
 
             table = new JTable(model);
+
             table.setFillsViewportHeight(true);
 
 
@@ -153,12 +151,12 @@ public class UserManagementScreenGUI extends JFrame {
         // Load new data
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema", "root", "123bombom");
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS")) {
+             ResultSet resultSet = statement.executeQuery("SELECT CATEGORY_NAME, CATEGORY_DESC FROM CATEGORY")) {
 
             while (resultSet.next()) {
-                String user = resultSet.getString("username");
-                String pass = resultSet.getString("password");
-                String[] row = {user,pass};
+                String CATEGORY_NAME = resultSet.getString("CATEGORY_NAME");
+                String CATEGORY_DESC = resultSet.getString("CATEGORY_DESC");
+                String[] row = {CATEGORY_NAME,CATEGORY_DESC};
                 model.addRow(row);
             }
         } catch (SQLException e) {

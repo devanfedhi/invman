@@ -1,6 +1,8 @@
 package GeneralScreens;
 
+import CategoryManagement.CategoryManagementScreenGUI;
 import UserManagement.UserManagementScreenGUI;
+import com.mysql.cj.log.Log;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +36,7 @@ public class HomeScreenGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UserManagementScreenGUI.getInstance().setVisible(true);
-                HomeScreenGUI.getInstance().setVisible(false);
+                HomeScreenGUI.getInstance().dispose();
             }
         });
         panel.add(userManagementButton);
@@ -54,7 +56,8 @@ public class HomeScreenGUI extends JFrame {
         categoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                CategoryManagementScreenGUI.getInstance().setVisible(true);
+                HomeScreenGUI.getInstance().dispose();
             }
         });
         panel.add(categoryButton);
@@ -94,7 +97,8 @@ public class HomeScreenGUI extends JFrame {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                LoginScreenGUI.getInstance().setVisible(true);
+                HomeScreenGUI.getInstance().dispose();
             }
         });
         panel.add(logoutButton);
