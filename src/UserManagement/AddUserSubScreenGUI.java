@@ -2,10 +2,13 @@ package UserManagement;
 
 
 import GeneralScreens.HomeScreenGUI;
+import GeneralScreens.LoginScreenGUI;
+import GeneralScreens.RegisterScreenGUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.List;
 
 public class AddUserSubScreenGUI extends JFrame {
@@ -61,6 +64,61 @@ public class AddUserSubScreenGUI extends JFrame {
 
         registerButton = new JButton("Register");
         registerButton.setBounds(10,100,90,25);
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection connection = null;
+                Statement stmt = null;
+                String sql = null;
+                String result = null;
+
+                String user = userText.getText();
+                String pass = passText.getText();
+
+                try {
+                    connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
+                } catch (SQLException ex){
+                    result = String.format("Could not connect to SQL database");
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                    return;
+                }
+
+
+                try {
+                    stmt = connection.createStatement();
+                    sql = String.format("SELECT USERNAME FROM USERS WHERE USERNAME = '%s'",user);
+                    ResultSet resultSet = stmt.executeQuery(sql);
+                    boolean userPass = resultSet.next();
+
+                    if (userPass) {
+                        result = String.format("User '%s' already exists. Choose another username",user);
+                        JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                        return;
+                    }
+
+                    stmt = connection.createStatement();
+                    sql = String.format("INSERT INTO USERS (username, password) VALUES ('%s','%s')",user,pass);
+                    stmt.executeUpdate(sql);
+
+                    result = String.format("User %s has been registered successfully", user);
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+
+                    List<JButton> allButtons = UserManagementScreenGUI.getInstance().getAllButtons();
+                    for (int i = 0; i < allButtons.size(); i++) {
+                        allButtons.get(i).setEnabled(true);
+                    }
+
+                    AddUserSubScreenGUI.getInstance().dispose();
+
+                    UserManagementScreenGUI.getInstance().refreshTable();
+
+
+                } catch (SQLException ex) {
+                    result = String.format("User has not been registered successfully. Try again");
+                    JOptionPane.showMessageDialog(AddUserSubScreenGUI.getInstance(), result);
+                }
+            }
+        });
         changeUserPanel.add(registerButton);
 
         cancelButton = new JButton("Cancel");
@@ -68,11 +126,12 @@ public class AddUserSubScreenGUI extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddUserSubScreenGUI.getInstance().dispose();
                 List<JButton> allButtons = UserManagementScreenGUI.getInstance().getAllButtons();
                 for (int i = 0; i < allButtons.size(); i++) {
                     allButtons.get(i).setEnabled(true);
                 }
+                AddUserSubScreenGUI.getInstance().dispose();
+
             }
         });
         changeUserPanel.add(cancelButton);

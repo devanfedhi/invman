@@ -58,11 +58,11 @@ public class RemoveUserSubScreenGUI extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RemoveUserSubScreenGUI.getInstance().dispose();
                 List<JButton> allButtons = UserManagementScreenGUI.getInstance().getAllButtons();
                 for (int i = 0; i < allButtons.size(); i++) {
                     allButtons.get(i).setEnabled(true);
                 }
+                RemoveUserSubScreenGUI.getInstance().dispose();
             }
         });
         removeUserPanel.add(cancelButton);

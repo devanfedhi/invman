@@ -19,11 +19,10 @@ public class UserManagementScreenGUI extends JFrame {
     private static JButton addUserButton;
     private static JButton removeUserButton;
 
-    public List<JButton> getAllButtons() {
-        return allButtons;
-    }
+    private static JTable table;
+    private static DefaultTableModel model;
 
-    private List<JButton> allButtons = new ArrayList<JButton>(Arrays.asList(homeButton,addUserButton,removeUserButton));
+    private List<JButton> allButtons = new ArrayList<>();
 
 
     private UserManagementScreenGUI(){
@@ -31,26 +30,18 @@ public class UserManagementScreenGUI extends JFrame {
 
         this.setupMain();
 
-        AddUserSubScreenGUI.getInstance();
-        RemoveUserSubScreenGUI.getInstance();
-
-
-//        Connection connection = null;
-//
-//        try {
-//            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema","root","123bombom");
-//
-//        } catch (SQLException e) {
-//            String result = String.format("Connection to server unsuccessful. Login failed. Try again");
-//            JOptionPane.showMessageDialog(UserManagement.UserManagementScreenGUI.getInstance(), result);
-//        }
-
     }
 
     public static UserManagementScreenGUI getInstance() {
         if (singleInstance == null) {
             singleInstance = new UserManagementScreenGUI();
         }
+
+        return singleInstance;
+    }
+
+    public static UserManagementScreenGUI refreshInstance() {
+        singleInstance = new UserManagementScreenGUI();
 
         return singleInstance;
     }
@@ -78,9 +69,10 @@ public class UserManagementScreenGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddUserSubScreenGUI.getInstance().setVisible(true);
-                homeButton.setEnabled(false);
-                addUserButton.setEnabled(false);
-                removeUserButton.setEnabled(false);
+                for (int i = 0; i < allButtons.size(); i++) {
+
+                    allButtons.get(i).setEnabled(false);
+                }
 
             }
         });
@@ -93,13 +85,19 @@ public class UserManagementScreenGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 RemoveUserSubScreenGUI.getInstance().setVisible(true);
                 for (int i = 0; i < allButtons.size(); i++) {
+
                     allButtons.get(i).setEnabled(false);
                 }
             }
         });
         panel.add(removeUserButton);
 
-        JTable table = createTable();
+        allButtons.add(homeButton);
+        allButtons.add(addUserButton);
+        allButtons.add(removeUserButton);
+
+
+        table = createTable();
         JScrollPane tableWithScroll = new JScrollPane(table);
         tableWithScroll.setBounds(200,10,300,500);
         panel.add(tableWithScroll);
@@ -120,7 +118,7 @@ public class UserManagementScreenGUI extends JFrame {
             int cols = rsmd.getColumnCount();
             String[] colName = new String[cols];
 
-            DefaultTableModel model = new DefaultTableModel();
+            model = new DefaultTableModel();
 
             for (int i = 0; i < cols; i++) {
                 colName[i] = rsmd.getColumnName(i+1);
@@ -144,6 +142,28 @@ public class UserManagementScreenGUI extends JFrame {
         return table;
 
 
+    }
+
+    public void refreshTable() {
+        model.setRowCount(0);
+
+        // Load new data
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/login_schema", "root", "123bombom");
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT USERNAME, PASSWORD FROM USERS")) {
+
+            while (resultSet.next()) {
+                String user = resultSet.getString("username");
+                String pass = resultSet.getString("password");
+                String[] row = {user,pass};
+                model.addRow(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<JButton> getAllButtons() {
+        return allButtons;
     }
 
 }
